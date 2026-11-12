@@ -1,3 +1,5 @@
+import { getDrawPhase, getDrawTiming } from './draw-timing.js';
+
 const elements = {
   title: document.querySelector('#draw-title'),
   status: document.querySelector('#status-pill'),
@@ -5,12 +7,15 @@ const elements = {
   animation: document.querySelector('#drawing-animation'),
   countdown: document.querySelector('#countdown'),
   progress: document.querySelector('#drawing-progress'),
+  step: document.querySelector('#drawing-step'),
+  board: document.querySelector('.draw-board'),
   connection: document.querySelector('#connection-status'),
   connectionLabel: document.querySelector('#connection-status .connection-label'),
 };
 
 let countdownTimer;
 let lastState;
+let previousStatus;
 let demoApi;
 
 const emptyState = () => ({
@@ -36,16 +41,13 @@ function teamCard(team) {
 
 function startCountdown(state) {
   window.clearInterval(countdownTimer);
-  const startedAt = new Date(state.startedAt).getTime();
-  const revealAt = new Date(state.revealAt).getTime();
-
   function update() {
-    const remaining = Math.max(0, revealAt - Date.now());
-    elements.countdown.textContent = Math.ceil(remaining / 1000);
-    const elapsedRatio = Math.min(1, Math.max(0, (Date.now() - startedAt) / (revealAt - startedAt)));
-    elements.progress.style.width = `${elapsedRatio * 100}%`;
+    const timing = getDrawTiming(state.startedAt, state.revealAt);
+    elements.countdown.textContent = timing.remainingSeconds;
+    elements.step.textContent = getDrawPhase(timing.remainingMs);
+    elements.progress.style.transform = `scaleX(${timing.progress})`;
 
-    if (remaining === 0) {
+    if (timing.remainingMs === 0) {
       window.clearInterval(countdownTimer);
       elements.countdown.textContent = '0';
       elements.title.textContent = 'Finalizando o sorteio';
@@ -60,7 +62,10 @@ function startCountdown(state) {
 }
 
 function render(state = emptyState()) {
+  const statusBeforeRender = previousStatus;
+  previousStatus = state.status;
   lastState = state;
+  document.body.dataset.drawState = state.status.toLowerCase();
   const drawing = state.status === 'DRAWING';
   const completed = state.status === 'COMPLETED';
 
@@ -79,6 +84,11 @@ function render(state = emptyState()) {
     elements.title.textContent = 'Os times estão definidos';
     elements.status.textContent = 'Finalizado';
     elements.teams.innerHTML = state.teams.map(teamCard).join('');
+    if (statusBeforeRender === 'DRAWING') {
+      elements.board.classList.remove('celebrate');
+      requestAnimationFrame(() => elements.board.classList.add('celebrate'));
+      window.setTimeout(() => elements.board.classList.remove('celebrate'), 1300);
+    }
   } else {
     elements.title.textContent = 'Aguardando o organizador';
     elements.status.textContent = 'Aguardando';

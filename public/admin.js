@@ -1,3 +1,5 @@
+import { getDrawTiming } from './draw-timing.js';
+
 const demoMode = new URLSearchParams(window.location.search).get('demo') === '1';
 const tokenKey = 'liga-futebas-admin-token';
 
@@ -21,6 +23,7 @@ let currentState = { status: 'IDLE' };
 let completionTimer;
 let toastTimer;
 let socket;
+let adminCountdownTimer;
 
 function showToast(message, error = false) {
   window.clearTimeout(toastTimer);
@@ -44,6 +47,7 @@ function showAdmin() {
 }
 
 function render(state) {
+  window.clearInterval(adminCountdownTimer);
   currentState = state;
   const drawing = state.status === 'DRAWING';
   const completed = state.status === 'COMPLETED';
@@ -55,7 +59,14 @@ function render(state) {
     elements.status.textContent = 'AO VIVO';
     elements.title.textContent = 'Sorteio em andamento';
     elements.description.textContent = 'A animação está sendo exibida para todos os visitantes.';
-    elements.draw.textContent = 'Sorteando...';
+    const updateCountdown = () => {
+      const timing = getDrawTiming(state.startedAt, state.revealAt);
+      elements.draw.textContent = timing.remainingMs > 0
+        ? `Sorteando · ${timing.remainingSeconds}s`
+        : 'Finalizando...';
+    };
+    updateCountdown();
+    adminCountdownTimer = window.setInterval(updateCountdown, 200);
   } else if (completed) {
     elements.status.textContent = 'PRONTO';
     elements.title.textContent = 'Times definidos com sucesso';
