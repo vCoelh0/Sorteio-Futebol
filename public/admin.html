@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel administrativo do sorteio Liga Futebas.">
+    <title>Controle do sorteio · Liga Futebas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="admin-body">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Liga Futebas — início">
+        <img src="/assets/logo.svg" alt="" width="38" height="43">
+        <span>LIGA FUTEBAS</span>
+      </a>
+      <span class="admin-label">Painel do administrador</span>
+    </header>
+
+    <main class="admin-page">
+      <section class="admin-intro">
+        <p class="eyebrow">Área do organizador</p>
+        <h1>Controle do sorteio</h1>
+        <p>Cada resultado aparece automaticamente na tela pública.</p>
+      </section>
+
+      <section class="metrics" aria-label="Resumo do sorteio">
+        <article><strong>25</strong><span>Participantes</span></article>
+        <article><strong>05</strong><span>Times</span></article>
+        <article><strong id="admin-status-number">—</strong><span>Status</span></article>
+      </section>
+
+      <section class="control-card">
+        <div class="control-copy">
+          <span class="control-icon">⚽</span>
+          <div><h2 id="admin-title">Tudo pronto para começar</h2><p id="admin-description">Inicie quando todos estiverem acompanhando a tela pública.</p></div>
+        </div>
+        <button class="primary-button" id="draw-button" type="button">Sortear times</button>
+      </section>
+
+      <section class="danger-zone">
+        <div><h2>Resetar sorteio</h2><p>Limpa os times da tela pública e retorna ao estado inicial.</p></div>
+        <button class="secondary-button danger" id="reset-button" type="button">Resetar sorteio</button>
+      </section>
+
+      <div class="toast" id="toast" role="status" hidden></div>
+    </main>
+    <script type="module" src="/admin.js"></script>
+  </body>
+</html>

@@ -50,6 +50,8 @@ Ao iniciar, todos os clientes recebem o estado `DRAWING`. Sete segundos depois, 
    npm run dev
    ```
 
+Para revisar somente o protótipo visual, sem banco de dados, use `npm run preview`. A tela pública fica em `/` e o painel simulado em `/admin.html`.
+
 ## Endpoints iniciais
 
 | Endpoint | Finalidade |

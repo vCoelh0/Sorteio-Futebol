@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Acompanhe ao vivo o sorteio dos times da Liga Futebas.">
+    <title>Sorteio ao vivo · Liga Futebas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Liga Futebas — início">
+        <img src="/assets/logo.svg" alt="" width="38" height="43">
+        <span>LIGA FUTEBAS</span>
+      </a>
+      <div class="live-badge"><span></span>Sorteio ao vivo</div>
+    </header>
+
+    <main class="public-page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Campeonato Liga Futebas</p>
+          <h1>A sorte entra em campo.</h1>
+          <p class="hero-copy">Acompanhe a formação dos cinco times, em tempo real.</p>
+        </div>
+        <div class="event-details" aria-label="Informações do evento">
+          <div><span>Data</span><strong>A definir</strong></div>
+          <div><span>Local</span><strong>A definir</strong></div>
+          <div><span>Formato</span><strong>5 times · 25 atletas</strong></div>
+        </div>
+      </section>
+
+      <section class="draw-board" aria-live="polite">
+        <div class="draw-heading">
+          <div>
+            <p class="eyebrow light">Sorteio dos times</p>
+            <h2 id="draw-title">Aguardando o organizador</h2>
+          </div>
+          <div class="status-pill" id="status-pill">Aguardando</div>
+        </div>
+
+        <div class="drawing-animation" id="drawing-animation" hidden>
+          <div class="orbit" aria-hidden="true">
+            <span class="ball ball-one"></span><span class="ball ball-two"></span><span class="ball ball-three"></span>
+            <img src="/assets/logo.svg" alt="" width="72" height="81">
+          </div>
+          <strong>Sorteando os times...</strong>
+          <p>O resultado aparece para todos em <span id="countdown">7</span>s</p>
+          <div class="progress-track"><span id="drawing-progress"></span></div>
+        </div>
+
+        <div class="teams-grid" id="teams-grid"></div>
+      </section>
+
+      <footer class="page-footer">
+        <span>25 participantes</span><span>5 times</span><span>5 jogadores por time</span>
+      </footer>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
