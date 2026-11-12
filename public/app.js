@@ -156,7 +156,8 @@ async function startLiveMode() {
   try {
     const response = await fetch('/api/participants', { headers: { accept: 'application/json' } });
     if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
-    renderParticipants(await response.json());
+    const { participants } = await response.json();
+    renderParticipants(participants);
   } catch (error) {
     console.error('Falha ao carregar os participantes:', error);
     showParticipantsError();
