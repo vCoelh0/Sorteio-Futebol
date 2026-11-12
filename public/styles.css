@@ -106,6 +106,17 @@ h1, h2 { margin: 0; font-family: "Barlow Condensed", sans-serif; line-height: .9
 .draw-board.celebrate .result-burst i:nth-child(4) { --x: 120px; --r: -40deg; }
 .draw-board.celebrate .result-burst i:nth-child(5) { --x: 240px; --r: 60deg; }
 .page-footer { padding: 25px 4px 42px; display: flex; gap: 30px; color: var(--muted); font-size: .75rem; }
+.site-footer { color: var(--white); background: var(--green-950); border-top: 4px solid var(--yellow); }
+.site-footer-content { width: min(1480px, calc(100% - 44px)); min-height: 180px; margin: 0 auto; padding: 28px 0; display: flex; align-items: center; justify-content: space-between; gap: 42px; }
+.sponsors { display: flex; align-items: center; gap: 28px; }
+.footer-label { margin: 0; color: rgba(255,255,255,.68); font-size: .66rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.sponsor-logos { display: flex; align-items: center; gap: 28px; }
+.sponsor-logo { display: block; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(0,0,0,.2)); }
+.sponsor-logo-big { width: 104px; height: 104px; }
+.sponsor-logo-m2 { width: 148px; height: 86px; }
+.footer-credit { margin: 0; color: rgba(255,255,255,.7); font-size: .75rem; white-space: nowrap; }
+.footer-credit a { color: var(--white); font-weight: 700; text-underline-offset: 4px; }
+.footer-credit a:hover, .footer-credit a:focus-visible { color: var(--yellow); }
 .load-error { grid-column: 1 / -1; padding: 28px; color: var(--white); background: rgba(0,0,0,.16); border: 1px solid rgba(255,255,255,.18); border-radius: 14px; text-align: center; }
 
 .admin-body { background: var(--surface); min-height: 100vh; }
@@ -174,6 +185,12 @@ button:disabled { cursor: not-allowed; opacity: .5; transform: none !important; 
   .player-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
   .player-list li { min-width: 0; font-size: .7rem; }
   .page-footer { flex-wrap: wrap; gap: 9px 18px; }
+  .site-footer-content { width: min(100% - 36px, 1180px); min-height: 0; padding: 30px 0 32px; align-items: flex-start; flex-direction: column; gap: 24px; }
+  .sponsors { width: 100%; align-items: flex-start; flex-direction: column; gap: 16px; }
+  .sponsor-logos { width: 100%; justify-content: space-between; gap: 20px; }
+  .sponsor-logo-big { width: 92px; height: 92px; }
+  .sponsor-logo-m2 { width: 138px; height: 80px; }
+  .footer-credit { white-space: normal; }
   .admin-page { padding-top: 46px; }
   .admin-intro h1 { font-size: 3.3rem; }
   .metrics article { min-height: 90px; padding: 17px 15px; }.metrics strong { font-size: 1.75rem; }

@@ -67,10 +67,23 @@
       </aside>
       </div>
 
-      <footer class="page-footer">
+      <footer class="page-footer" aria-label="Resumo do sorteio">
         <span>25 participantes</span><span>5 times</span><span>5 jogadores por time</span>
       </footer>
     </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-content">
+        <section class="sponsors" aria-labelledby="sponsors-title">
+          <p class="footer-label" id="sponsors-title">Patrocinadores</p>
+          <div class="sponsor-logos">
+            <img class="sponsor-logo sponsor-logo-big" src="/assets/big-personal.png" alt="Big Personal" width="110" height="110">
+            <img class="sponsor-logo sponsor-logo-m2" src="/assets/m2-move.png" alt="M2 Move" width="150" height="90">
+          </div>
+        </section>
+        <p class="footer-credit">desenvolvido por: <a href="https://github.com/vcoelh0" target="_blank" rel="noopener noreferrer">Vinicius Coelho</a></p>
+      </div>
+    </footer>
     <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="/app.js"></script>
   </body>
