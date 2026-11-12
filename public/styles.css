@@ -26,6 +26,10 @@ button { cursor: pointer; }
 .live-badge, .status-pill { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .live-badge { color: var(--green-700); }
 .live-badge span { width: 8px; height: 8px; border-radius: 50%; background: #e93f37; box-shadow: 0 0 0 5px rgba(233,63,55,.12); animation: pulse 1.8s infinite; }
+.live-badge .connection-label { width: auto; height: auto; border-radius: 0; background: none; box-shadow: none; animation: none; }
+.live-badge.connected span:first-child { background: #27a463; box-shadow: 0 0 0 5px rgba(39,164,99,.12); }
+.live-badge.disconnected { color: var(--muted); }
+.live-badge.disconnected span:first-child { background: #909993; box-shadow: none; animation: none; }
 .admin-label { color: var(--green-700); font-size: .78rem; font-weight: 700; }
 
 .public-page, .admin-page { width: min(1180px, calc(100% - 44px)); margin: 0 auto; }
@@ -72,6 +76,7 @@ h1, h2 { margin: 0; font-family: "Barlow Condensed", sans-serif; line-height: .9
 .progress-track { width: min(330px, 80%); height: 5px; overflow: hidden; margin-top: 12px; border-radius: 5px; background: rgba(255,255,255,.16); }
 .progress-track span { display: block; width: 0; height: 100%; background: var(--yellow); }
 .page-footer { padding: 25px 4px 42px; display: flex; gap: 30px; color: var(--muted); font-size: .75rem; }
+.load-error { grid-column: 1 / -1; padding: 28px; color: var(--white); background: rgba(0,0,0,.16); border: 1px solid rgba(255,255,255,.18); border-radius: 14px; text-align: center; }
 
 .admin-body { background: var(--surface); min-height: 100vh; }
 .admin-page { max-width: 880px; padding: clamp(46px, 8vw, 88px) 0 70px; }

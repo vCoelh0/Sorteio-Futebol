@@ -1,5 +1,3 @@
-import { emptyState, readState, subscribe, writeState } from './demo-state.js';
-
 const elements = {
   title: document.querySelector('#draw-title'),
   status: document.querySelector('#status-pill'),
@@ -7,9 +5,17 @@ const elements = {
   animation: document.querySelector('#drawing-animation'),
   countdown: document.querySelector('#countdown'),
   progress: document.querySelector('#drawing-progress'),
+  connection: document.querySelector('#connection-status'),
+  connectionLabel: document.querySelector('#connection-status .connection-label'),
 };
 
 let countdownTimer;
+let lastState;
+let demoApi;
+
+const emptyState = () => ({
+  status: 'IDLE', teams: [], startedAt: null, revealAt: null, completedAt: null,
+});
 
 function placeholderCard(index) {
   return `<article class="team-card placeholder">
@@ -41,7 +47,11 @@ function startCountdown(state) {
 
     if (remaining === 0) {
       window.clearInterval(countdownTimer);
-      writeState({ ...state, status: 'COMPLETED', completedAt: new Date().toISOString() });
+      elements.countdown.textContent = '0';
+      elements.title.textContent = 'Finalizando o sorteio';
+      if (demoApi) {
+        demoApi.writeState({ ...state, status: 'COMPLETED', completedAt: new Date().toISOString() });
+      }
     }
   }
 
@@ -50,6 +60,7 @@ function startCountdown(state) {
 }
 
 function render(state = emptyState()) {
+  lastState = state;
   const drawing = state.status === 'DRAWING';
   const completed = state.status === 'COMPLETED';
 
@@ -75,5 +86,67 @@ function render(state = emptyState()) {
   }
 }
 
-subscribe(render);
-render(readState());
+function setConnection(status, label) {
+  elements.connection.classList.remove('connected', 'disconnected');
+  elements.connection.classList.add(status);
+  elements.connectionLabel.textContent = label;
+}
+
+function showLoadError(message) {
+  window.clearInterval(countdownTimer);
+  elements.animation.hidden = true;
+  elements.teams.hidden = false;
+  elements.title.textContent = 'Não foi possível carregar o sorteio';
+  elements.status.textContent = 'Indisponível';
+  elements.teams.innerHTML = `<div class="load-error">${message}</div>`;
+}
+
+async function startDemoMode() {
+  const demo = await import('./demo-state.js');
+  demoApi = demo;
+  setConnection('connected', 'Modo demonstração');
+  demo.subscribe(render);
+  render(demo.readState());
+}
+
+async function startLiveMode() {
+  setConnection('disconnected', 'Conectando...');
+
+  try {
+    const response = await fetch('/api/draw', { headers: { accept: 'application/json' } });
+    if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
+    render(await response.json());
+  } catch (error) {
+    console.error('Falha ao carregar o estado inicial:', error);
+    showLoadError('Verifique a conexão e tente atualizar a página.');
+  }
+
+  if (typeof window.io !== 'function') {
+    setConnection('disconnected', 'Sem conexão ao vivo');
+    return;
+  }
+
+  const socket = window.io({
+    transports: ['websocket', 'polling'],
+    reconnection: true,
+    reconnectionDelay: 800,
+    reconnectionDelayMax: 5000,
+  });
+
+  socket.on('connect', () => setConnection('connected', 'Sorteio ao vivo'));
+  socket.on('draw:state', render);
+  socket.on('draw:error', ({ message }) => showLoadError(message));
+  socket.on('disconnect', () => {
+    setConnection('disconnected', 'Reconectando...');
+    if (lastState) render(lastState);
+  });
+  socket.io.on('reconnect_attempt', () => setConnection('disconnected', 'Reconectando...'));
+  socket.io.on('reconnect_failed', () => setConnection('disconnected', 'Conexão perdida'));
+}
+
+render(emptyState());
+if (new URLSearchParams(window.location.search).get('demo') === '1') {
+  startDemoMode();
+} else {
+  startLiveMode();
+}

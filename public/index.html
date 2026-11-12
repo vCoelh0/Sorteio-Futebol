@@ -16,7 +16,7 @@
         <img src="/assets/logo.svg" alt="" width="38" height="43">
         <span>LIGA FUTEBAS</span>
       </a>
-      <div class="live-badge"><span></span>Sorteio ao vivo</div>
+      <div class="live-badge" id="connection-status"><span></span><span class="connection-label">Conectando...</span></div>
     </header>
 
     <main class="public-page">
@@ -59,6 +59,7 @@
         <span>25 participantes</span><span>5 times</span><span>5 jogadores por time</span>
       </footer>
     </main>
+    <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="/app.js"></script>
   </body>
 </html>
