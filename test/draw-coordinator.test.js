@@ -10,7 +10,7 @@ const drawingState = {
 const completedState = { ...drawingState, status: 'COMPLETED', teams: [{ name: 'TIME 1' }] };
 const idleState = { status: 'IDLE', teams: [], startedAt: null, revealAt: null };
 
-function harness(persistedStatus = 'IDLE') {
+function harness(now = '2026-11-12T12:00:00.000Z') {
   const events = [];
   let scheduled;
   let cleared = false;
@@ -19,11 +19,10 @@ function harness(persistedStatus = 'IDLE') {
     beginDraw: async () => drawingState,
     completeDraw: async () => completedState,
     getDrawState: async () => drawingState,
-    getPersistedDrawState: async () => ({ status: persistedStatus }),
     resetDraw: async () => idleState,
   };
   const timers = {
-    now: () => new Date('2026-11-12T12:00:00.000Z').getTime(),
+    now: () => new Date(now).getTime(),
     set: (callback) => { scheduled = callback; return 123; },
     clear: () => { cleared = true; scheduled = undefined; },
   };
@@ -52,10 +51,18 @@ test('reset cancela a conclusão pendente e transmite o estado inicial', async (
 });
 
 test('retoma a conclusão pendente depois de reiniciar o servidor', async () => {
-  const testHarness = harness('DRAWING');
+  const testHarness = harness();
   await testHarness.coordinator.resume();
   await testHarness.runScheduled();
 
   assert.equal(testHarness.events.length, 1);
   assert.equal(testHarness.events[0].payload.status, 'COMPLETED');
+});
+
+test('conclui um sorteio vencido quando um cliente consulta o estado', async () => {
+  const testHarness = harness('2026-11-12T12:00:08.000Z');
+  const state = await testHarness.coordinator.getState();
+
+  assert.equal(state.status, 'COMPLETED');
+  assert.equal(testHarness.events.at(-1).payload.status, 'COMPLETED');
 });

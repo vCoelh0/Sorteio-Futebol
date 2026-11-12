@@ -16,6 +16,7 @@ const elements = {
 };
 
 let countdownTimer;
+let completionSyncTimer;
 let lastState;
 let previousStatus;
 let demoApi;
@@ -74,12 +75,29 @@ function startCountdown(state) {
       elements.title.textContent = 'Finalizando o sorteio';
       if (demoApi) {
         demoApi.writeState({ ...state, status: 'COMPLETED', completedAt: new Date().toISOString() });
+      } else {
+        scheduleCompletionSync();
       }
     }
   }
 
   update();
   countdownTimer = window.setInterval(update, 100);
+}
+
+function scheduleCompletionSync(delay = 250) {
+  window.clearTimeout(completionSyncTimer);
+  completionSyncTimer = window.setTimeout(async () => {
+    try {
+      const response = await fetch('/api/draw', { headers: { accept: 'application/json' } });
+      if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
+      render(await response.json());
+    } catch (error) {
+      console.error('Falha ao sincronizar o resultado:', error);
+    }
+
+    if (lastState?.status === 'DRAWING') scheduleCompletionSync(1000);
+  }, delay);
 }
 
 function render(state = emptyState()) {
@@ -101,6 +119,7 @@ function render(state = emptyState()) {
   }
 
   window.clearInterval(countdownTimer);
+  window.clearTimeout(completionSyncTimer);
   if (completed) {
     elements.title.textContent = 'Os times estão definidos';
     elements.status.textContent = 'Finalizado';
@@ -125,6 +144,7 @@ function setConnection(status, label) {
 
 function showLoadError(message) {
   window.clearInterval(countdownTimer);
+  window.clearTimeout(completionSyncTimer);
   elements.animation.hidden = true;
   elements.teams.hidden = false;
   elements.title.textContent = 'Não foi possível carregar o sorteio';

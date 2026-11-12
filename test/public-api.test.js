@@ -36,11 +36,13 @@ test('entrega o estado real e o cliente Socket.IO na tela pública', async () =>
     assert.match(html, /connection-status/);
     assert.match(html, /liga-futebas-2026\.png/);
     assert.match(html, /participants-list/);
+    assert.match(html, /href="\/admin\.html">Administrador/);
 
     const scriptResponse = await fetch(`http://127.0.0.1:${port}/app.js`);
     const script = await scriptResponse.text();
     assert.match(script, /const \{ participants \} = await response\.json\(\)/);
     assert.match(script, /renderParticipants\(participants\)/);
+    assert.match(script, /scheduleCompletionSync/);
   } finally {
     await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
   }

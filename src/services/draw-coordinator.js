@@ -3,7 +3,6 @@ import {
   beginDraw,
   completeDraw,
   getDrawState,
-  getPersistedDrawState,
   resetDraw,
 } from './draw-state.js';
 
@@ -12,7 +11,6 @@ export function createDrawCoordinator(io, options = {}) {
     beginDraw,
     completeDraw,
     getDrawState,
-    getPersistedDrawState,
     resetDraw,
     ...options.operations,
   };
@@ -45,8 +43,24 @@ export function createDrawCoordinator(io, options = {}) {
     }, delay);
   }
 
+  async function getCurrentState() {
+    const state = await operations.getDrawState();
+    const revealTime = state.revealAt ? new Date(state.revealAt).getTime() : Number.POSITIVE_INFINITY;
+
+    if (state.status !== DRAW_STATUS.DRAWING || revealTime > timers.now()) return state;
+
+    const completedState = await operations.completeDraw(state.startedAt);
+    if (completedState) {
+      clearCompletionTimer();
+      io.emit('draw:state', completedState);
+      return completedState;
+    }
+
+    return operations.getDrawState();
+  }
+
   return {
-    getState: operations.getDrawState,
+    getState: getCurrentState,
 
     async start() {
       const state = await operations.beginDraw();
@@ -63,11 +77,10 @@ export function createDrawCoordinator(io, options = {}) {
     },
 
     async resume() {
-      const persisted = await operations.getPersistedDrawState();
-      if (persisted.status !== DRAW_STATUS.DRAWING) return;
-
-      const publicState = await operations.getDrawState();
-      scheduleCompletion(publicState.startedAt, publicState.revealAt);
+      const state = await getCurrentState();
+      if (state.status === DRAW_STATUS.DRAWING) {
+        scheduleCompletion(state.startedAt, state.revealAt);
+      }
     },
 
     stop() {

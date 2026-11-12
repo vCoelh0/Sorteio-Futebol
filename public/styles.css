@@ -27,6 +27,9 @@ button { cursor: pointer; }
 .brand-copy strong { font: 800 1.55rem/1 "Barlow Condensed", sans-serif; letter-spacing: .025em; }
 .brand-copy small { color: var(--green-700); font-size: .58rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .live-badge, .status-pill { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.public-header-actions { display: flex; align-items: center; gap: 24px; }
+.admin-nav-button { min-height: 38px; padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; color: var(--green-950); background: var(--yellow); border-radius: 999px; font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-decoration: none; text-transform: uppercase; transition: transform .18s, box-shadow .18s; }
+.admin-nav-button:hover, .admin-nav-button:focus-visible { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(244,196,48,.28); }
 .live-badge { color: var(--green-700); }
 .live-badge span { width: 8px; height: 8px; border-radius: 50%; background: #e93f37; box-shadow: 0 0 0 5px rgba(233,63,55,.12); animation: pulse 1.8s infinite; }
 .live-badge .connection-label { width: auto; height: auto; border-radius: 0; background: none; box-shadow: none; animation: none; }
@@ -172,6 +175,9 @@ button:disabled { cursor: not-allowed; opacity: .5; transform: none !important; 
   .site-header { min-height: 72px; padding: 13px 18px; }
   .brand img { width: 47px; height: 52px; }.brand-copy strong { font-size: 1.15rem; }.brand-copy small { font-size: .48rem; }
   .live-badge { font-size: .6rem; }.admin-label { font-size: .64rem; }
+  .public-header-actions { align-items: flex-end; flex-direction: column; gap: 9px; }
+  .public-header-actions .live-badge { font-size: .52rem; }
+  .admin-nav-button { min-height: 34px; padding: 0 12px; font-size: .6rem; }
   .public-page, .admin-page { width: min(100% - 28px, 1180px); }
   .hero { padding: 38px 6px 28px; }
   .hero h1 { font-size: 3.25rem; }

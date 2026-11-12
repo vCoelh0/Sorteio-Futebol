@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   beginDraw,
+  completeDraw,
   DrawConflictError,
   getDrawState,
   ParticipantCountError,
@@ -76,4 +77,18 @@ test('grava os cinco times em transação sem revelá-los antes da conclusão', 
   assert.deepEqual(state.teams, []);
   assert.ok(calls.includes('COMMIT'));
   assert.ok(calls.includes('RELEASE'));
+});
+
+test('conclui o sorteio comparando o início com precisão de milissegundos', async () => {
+  let query;
+  const database = {
+    async query(sql) {
+      query = sql;
+      return { rowCount: 1, rows: [stateRow('COMPLETED')] };
+    },
+  };
+
+  const state = await completeDraw(timestamp.toISOString(), database);
+  assert.equal(state.status, 'COMPLETED');
+  assert.match(query, /date_trunc\('milliseconds', started_at\)/);
 });

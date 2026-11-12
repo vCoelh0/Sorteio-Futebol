@@ -97,7 +97,7 @@ export async function completeDraw(expectedStartedAt, database = pool) {
             updated_at = NOW()
       WHERE id = 1
         AND status = $2
-        AND started_at = $3
+        AND date_trunc('milliseconds', started_at) = $3::timestamptz
     RETURNING status, teams, started_at, completed_at, updated_at`,
     [DRAW_STATUS.COMPLETED, DRAW_STATUS.DRAWING, expectedStartedAt],
   );
