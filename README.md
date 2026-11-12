@@ -17,6 +17,7 @@ O backend já executa e persiste o sorteio completo:
 - sorteio aleatório dos cinco times, sem nomes repetidos;
 - transmissão simultânea do início, resultado e reset pelo Socket.IO;
 - recuperação automática de um sorteio após reinício do servidor.
+- deploy preparado para Render com atualização automática após a CI da `main` passar.
 
 Ao iniciar, todos os clientes recebem o estado `DRAWING`. Sete segundos depois, recebem os cinco times pelo evento `draw:state`. O resultado permanece salvo até o administrador resetá-lo.
 
@@ -76,9 +77,20 @@ Execute a suíte com `npm test`. Ela cobre autenticação e rotas administrativa
 
 Ao abrir uma conexão Socket.IO, o servidor envia o estado persistido pelo evento `draw:state`. O mesmo evento é transmitido a todos no início e na conclusão do sorteio e após o reset. Enquanto o estado é `DRAWING`, os times permanecem ocultos na API e no socket.
 
-## Próximas etapas
+## Produção
 
-- cadastrar os nomes reais dos 25 participantes;
-- integrar o frontend responsivo baseado nos protótipos.
+O arquivo `render.yaml` configura um Web Service no Render ligado à branch `main`. O autodeploy usa `checksPass`: uma nova versão só é publicada depois que o workflow de testes do GitHub termina com sucesso.
 
-O arquivo `data/participants.json` contém nomes temporários e poderá ser substituído antes da importação para o banco.
+No primeiro deploy, informe no Render:
+
+- `DATABASE_URL`: conexão PostgreSQL fornecida pelo Neon;
+- `ADMIN_PASSWORD`: senha usada para entrar no painel administrativo;
+- `CLIENT_ORIGIN`: URL HTTPS pública do serviço no Render.
+
+O `ADMIN_TOKEN` é gerado automaticamente pelo Render. O comando de build instala as dependências, aplica todas as migrações e sincroniza os 25 jogadores de `data/participants.json`. Essas operações são idempotentes e podem ser executadas novamente em futuros autodeploys.
+
+Depois do deploy, valide:
+
+- `GET /api/health` para a aplicação;
+- `GET /api/health/database` para a conexão com o Neon;
+- tela pública, painel administrativo e atualização ao vivo pelo Socket.IO.

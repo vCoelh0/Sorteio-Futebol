@@ -3,6 +3,8 @@ services:
     name: sorteio-futebol
     runtime: node
     plan: free
+    branch: main
+    autoDeployTrigger: checksPass
     buildCommand: npm ci && npm run migrate && npm run seed
     startCommand: npm start
     healthCheckPath: /api/health
@@ -14,6 +16,6 @@ services:
       - key: ADMIN_PASSWORD
         sync: false
       - key: ADMIN_TOKEN
-        sync: false
+        generateValue: true
       - key: CLIENT_ORIGIN
         sync: false
