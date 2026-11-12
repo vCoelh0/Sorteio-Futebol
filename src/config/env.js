@@ -14,6 +14,7 @@ export const env = Object.freeze({
   isProduction: nodeEnv === 'production',
   port: parsePort(process.env.PORT),
   databaseUrl: process.env.DATABASE_URL ?? '',
+  adminPassword: process.env.ADMIN_PASSWORD ?? '',
   adminToken: process.env.ADMIN_TOKEN ?? '',
   clientOrigin: process.env.CLIENT_ORIGIN ?? 'http://localhost:3000',
 });
@@ -30,6 +31,6 @@ export function assertDatabaseEnv() {
 }
 
 export function assertRuntimeEnv() {
-  assertRequired(['databaseUrl', 'adminToken']);
+  assertRequired(['databaseUrl', 'adminPassword', 'adminToken']);
 }
 

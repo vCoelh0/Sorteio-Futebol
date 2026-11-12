@@ -35,6 +35,8 @@ Ao iniciar, todos os clientes recebem o estado `DRAWING`. Sete segundos depois, 
 
 2. Copie `.env.example` para `.env` e preencha os valores.
 
+   `ADMIN_PASSWORD` é a senha digitada na tela de login. `ADMIN_TOKEN` é o token interno devolvido após o login e pode ser qualquer valor secreto diferente da senha.
+
 3. Crie as tabelas e importe os participantes de `data/participants.json`:
 
    ```bash
@@ -56,10 +58,12 @@ Ao iniciar, todos os clientes recebem o estado `DRAWING`. Sete segundos depois, 
 | `GET /api/health` | Estado da aplicação |
 | `GET /api/health/database` | Estado da conexão com o banco |
 | `GET /api/draw` | Estado público atual do sorteio |
+| `POST /api/admin/login` | Valida a senha e devolve o token administrativo |
+| `GET /api/admin/session` | Verifica se o token ainda é válido |
 | `POST /api/admin/draw` | Inicia o sorteio de sete segundos |
 | `POST /api/admin/reset` | Limpa o resultado e retorna para `IDLE` |
 
-As rotas administrativas exigem `Authorization: Bearer <ADMIN_TOKEN>` ou o cabeçalho `x-admin-token`.
+O login recebe `{ "password": "..." }`. As demais rotas administrativas exigem `Authorization: Bearer <token>` ou o cabeçalho `x-admin-token`. Para sair, o frontend só precisa apagar o token armazenado localmente.
 
 Ao abrir uma conexão Socket.IO, o servidor envia o estado persistido pelo evento `draw:state`. O mesmo evento é transmitido a todos no início e na conclusão do sorteio e após o reset. Enquanto o estado é `DRAWING`, os times permanecem ocultos na API e no socket.
 
