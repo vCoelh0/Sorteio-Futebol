@@ -7,22 +7,36 @@ import {
   resetDraw,
 } from './draw-state.js';
 
-export function createDrawCoordinator(io) {
+export function createDrawCoordinator(io, options = {}) {
+  const operations = {
+    beginDraw,
+    completeDraw,
+    getDrawState,
+    getPersistedDrawState,
+    resetDraw,
+    ...options.operations,
+  };
+  const timers = {
+    set: setTimeout,
+    clear: clearTimeout,
+    now: Date.now,
+    ...options.timers,
+  };
   let completionTimer = null;
 
   function clearCompletionTimer() {
-    if (completionTimer) clearTimeout(completionTimer);
+    if (completionTimer) timers.clear(completionTimer);
     completionTimer = null;
   }
 
   function scheduleCompletion(startedAt, revealAt) {
     clearCompletionTimer();
-    const delay = Math.max(0, new Date(revealAt).getTime() - Date.now());
+    const delay = Math.max(0, new Date(revealAt).getTime() - timers.now());
 
-    completionTimer = setTimeout(async () => {
+    completionTimer = timers.set(async () => {
       completionTimer = null;
       try {
-        const state = await completeDraw(startedAt);
+        const state = await operations.completeDraw(startedAt);
         if (state) io.emit('draw:state', state);
       } catch (error) {
         console.error('Falha ao concluir o sorteio:', error);
@@ -32,10 +46,10 @@ export function createDrawCoordinator(io) {
   }
 
   return {
-    getState: getDrawState,
+    getState: operations.getDrawState,
 
     async start() {
-      const state = await beginDraw();
+      const state = await operations.beginDraw();
       io.emit('draw:state', state);
       scheduleCompletion(state.startedAt, state.revealAt);
       return state;
@@ -43,16 +57,16 @@ export function createDrawCoordinator(io) {
 
     async reset() {
       clearCompletionTimer();
-      const state = await resetDraw();
+      const state = await operations.resetDraw();
       io.emit('draw:state', state);
       return state;
     },
 
     async resume() {
-      const persisted = await getPersistedDrawState();
+      const persisted = await operations.getPersistedDrawState();
       if (persisted.status !== DRAW_STATUS.DRAWING) return;
 
-      const publicState = await getDrawState();
+      const publicState = await operations.getDrawState();
       scheduleCompletion(publicState.startedAt, publicState.revealAt);
     },
 

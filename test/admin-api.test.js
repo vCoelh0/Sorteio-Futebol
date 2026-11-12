@@ -10,11 +10,13 @@ const { configureApp } = await import('../src/app.js');
 const idleState = { status: 'IDLE', teams: [] };
 
 test('faz login e protege a sessão administrativa', async () => {
+  let drawCalls = 0;
+  let resetCalls = 0;
   const app = express();
   configureApp(app, {
     getState: async () => idleState,
-    start: async () => idleState,
-    reset: async () => idleState,
+    start: async () => { drawCalls += 1; return { status: 'DRAWING', teams: [] }; },
+    reset: async () => { resetCalls += 1; return idleState; },
   });
   const server = createServer(app);
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -45,6 +47,21 @@ test('faz login e protege a sessão administrativa', async () => {
     });
     assert.equal(session.status, 200);
     assert.deepEqual(await session.json(), { authenticated: true });
+
+    const deniedDraw = await fetch(`${baseUrl}/api/admin/draw`, { method: 'POST' });
+    assert.equal(deniedDraw.status, 401);
+
+    const authorizedDraw = await fetch(`${baseUrl}/api/admin/draw`, {
+      method: 'POST', headers: { authorization: 'Bearer token-de-teste' },
+    });
+    assert.equal(authorizedDraw.status, 202);
+    assert.equal(drawCalls, 1);
+
+    const authorizedReset = await fetch(`${baseUrl}/api/admin/reset`, {
+      method: 'POST', headers: { authorization: 'Bearer token-de-teste' },
+    });
+    assert.equal(authorizedReset.status, 200);
+    assert.equal(resetCalls, 1);
   } finally {
     await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
   }

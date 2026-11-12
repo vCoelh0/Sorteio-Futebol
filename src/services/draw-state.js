@@ -21,8 +21,8 @@ function toPublicState(row) {
   };
 }
 
-export async function getPersistedDrawState() {
-  const result = await pool.query(
+export async function getPersistedDrawState(database = pool) {
+  const result = await database.query(
     `SELECT status, teams, started_at, completed_at, updated_at
        FROM draw_state
       WHERE id = 1`,
@@ -35,12 +35,12 @@ export async function getPersistedDrawState() {
   return result.rows[0];
 }
 
-export async function getDrawState() {
-  return toPublicState(await getPersistedDrawState());
+export async function getDrawState(database = pool) {
+  return toPublicState(await getPersistedDrawState(database));
 }
 
-export async function beginDraw() {
-  const client = await pool.connect();
+export async function beginDraw(database = pool) {
+  const client = await database.connect();
 
   try {
     await client.query('BEGIN');
@@ -89,8 +89,8 @@ export async function beginDraw() {
   }
 }
 
-export async function completeDraw(expectedStartedAt) {
-  const result = await pool.query(
+export async function completeDraw(expectedStartedAt, database = pool) {
+  const result = await database.query(
     `UPDATE draw_state
         SET status = $1,
             completed_at = NOW(),
@@ -105,8 +105,8 @@ export async function completeDraw(expectedStartedAt) {
   return result.rowCount === 1 ? toPublicState(result.rows[0]) : null;
 }
 
-export async function resetDraw() {
-  const result = await pool.query(
+export async function resetDraw(database = pool) {
+  const result = await database.query(
     `UPDATE draw_state
         SET status = $1,
             teams = '[]'::jsonb,

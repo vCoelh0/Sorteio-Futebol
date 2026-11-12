@@ -69,6 +69,10 @@ O login recebe `{ "password": "..." }`. As demais rotas administrativas exigem `
 
 O painel em `/admin.html` já possui formulário de login, mantém o token apenas durante a sessão da aba e acompanha pelo Socket.IO a conclusão do sorteio. No modo visual sem backend, use `/admin.html?demo=1`.
 
+## Testes
+
+Execute a suíte com `npm test`. Ela cobre autenticação e rotas administrativas, formação dos times, transações do sorteio, bloqueio de execuções simultâneas, quantidade de participantes, ocultação do resultado durante a animação, reset, transmissão ao vivo e retomada após reinício do servidor.
+
 Ao abrir uma conexão Socket.IO, o servidor envia o estado persistido pelo evento `draw:state`. O mesmo evento é transmitido a todos no início e na conclusão do sorteio e após o reset. Enquanto o estado é `DRAWING`, os times permanecem ocultos na API e no socket.
 
 ## Próximas etapas
