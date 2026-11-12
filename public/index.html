@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Acompanhe ao vivo o sorteio dos times da Liga Futebas.">
     <title>Sorteio ao vivo · Liga Futebas</title>
+    <link rel="icon" type="image/png" href="/assets/liga-futebas-2026.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,8 +14,8 @@
   <body>
     <header class="site-header">
       <a class="brand" href="/" aria-label="Liga Futebas — início">
-        <img src="/assets/logo.svg" alt="" width="38" height="43">
-        <span>LIGA FUTEBAS</span>
+        <img src="/assets/liga-futebas-2026.png" alt="" width="58" height="58">
+        <span class="brand-copy"><strong>LIGA FUTEBAS</strong><small>Campeão · 1ª edição · 2026</small></span>
       </a>
       <div class="live-badge" id="connection-status"><span></span><span class="connection-label">Conectando...</span></div>
     </header>
@@ -33,6 +34,7 @@
         </div>
       </section>
 
+      <div class="main-content-grid">
       <section class="draw-board" aria-live="polite">
         <div class="draw-heading">
           <div>
@@ -45,7 +47,7 @@
         <div class="drawing-animation" id="drawing-animation" hidden>
           <div class="orbit" aria-hidden="true">
             <span class="ball ball-one"></span><span class="ball ball-two"></span><span class="ball ball-three"></span>
-            <img src="/assets/logo.svg" alt="" width="72" height="81">
+            <img src="/assets/liga-futebas-2026.png" alt="" width="86" height="86">
           </div>
           <strong>Sorteando os times...</strong>
           <span class="drawing-step" id="drawing-step">Embaralhando os 25 participantes</span>
@@ -56,6 +58,15 @@
         <div class="teams-grid" id="teams-grid"></div>
         <div class="result-burst" id="result-burst" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       </section>
+
+      <aside class="participants-panel" aria-labelledby="participants-title">
+        <div class="participants-heading">
+          <div><p class="eyebrow">Elenco completo</p><h2 id="participants-title">Jogadores</h2></div>
+          <span id="participants-count">25 nomes</span>
+        </div>
+        <ol class="participants-list" id="participants-list"></ol>
+      </aside>
+      </div>
 
       <footer class="page-footer">
         <span>25 participantes</span><span>5 times</span><span>5 jogadores por time</span>

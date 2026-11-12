@@ -11,6 +11,8 @@ const elements = {
   board: document.querySelector('.draw-board'),
   connection: document.querySelector('#connection-status'),
   connectionLabel: document.querySelector('#connection-status .connection-label'),
+  participants: document.querySelector('#participants-list'),
+  participantsCount: document.querySelector('#participants-count'),
 };
 
 let countdownTimer;
@@ -37,6 +39,25 @@ function teamCard(team) {
     <div class="team-title"><strong>${team.name}</strong><span>${team.number}</span></div>
     <ol class="player-list">${players}</ol>
   </article>`;
+}
+
+function renderParticipants(participants) {
+  elements.participants.replaceChildren();
+  elements.participantsCount.textContent = `${participants.length} nomes`;
+
+  for (const participant of participants) {
+    const item = document.createElement('li');
+    item.textContent = participant.name;
+    elements.participants.append(item);
+  }
+}
+
+function showParticipantsError() {
+  elements.participantsCount.textContent = 'Indisponível';
+  const item = document.createElement('li');
+  item.className = 'participants-empty';
+  item.textContent = 'Não foi possível carregar a lista de jogadores.';
+  elements.participants.replaceChildren(item);
 }
 
 function startCountdown(state) {
@@ -115,6 +136,7 @@ async function startDemoMode() {
   const demo = await import('./demo-state.js');
   demoApi = demo;
   setConnection('connected', 'Modo demonstração');
+  renderParticipants(demo.participants);
   demo.subscribe(render);
   render(demo.readState());
 }
@@ -129,6 +151,15 @@ async function startLiveMode() {
   } catch (error) {
     console.error('Falha ao carregar o estado inicial:', error);
     showLoadError('Verifique a conexão e tente atualizar a página.');
+  }
+
+  try {
+    const response = await fetch('/api/participants', { headers: { accept: 'application/json' } });
+    if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
+    renderParticipants(await response.json());
+  } catch (error) {
+    console.error('Falha ao carregar os participantes:', error);
+    showParticipantsError();
   }
 
   if (typeof window.io !== 'function') {

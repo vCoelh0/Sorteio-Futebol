@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 72" role="img" aria-labelledby="title">
-  <title id="title">Liga Futebas</title>
-  <path d="M32 2 58 11v20c0 18-10 31-26 39C16 62 6 49 6 31V11L32 2Z" fill="#0b4a2c"/>
-  <path d="M32 8 51 15v16c0 13-7 23-19 30-12-7-19-17-19-30V15L32 8Z" fill="#f7c735"/>
-  <path d="M32 13 46 18v13c0 10-5 18-14 24-9-6-14-14-14-24V18l14-5Z" fill="#fff"/>
-  <circle cx="32" cy="31" r="11" fill="#0b4a2c"/>
-  <path d="m32 22 5 4-2 6h-6l-2-6 5-4Zm-9 9 6 1 2 6-5 4-5-4 2-7Zm18 0 2 7-5 4-5-4 2-6 6-1Z" fill="#f7c735"/>
-</svg>

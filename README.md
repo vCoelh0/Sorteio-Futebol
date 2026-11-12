@@ -60,6 +60,7 @@ Para revisar somente o protótipo visual, sem banco de dados, use `npm run previ
 | `GET /api/health` | Estado da aplicação |
 | `GET /api/health/database` | Estado da conexão com o banco |
 | `GET /api/draw` | Estado público atual do sorteio |
+| `GET /api/participants` | Lista pública dos jogadores ativos |
 | `POST /api/admin/login` | Valida a senha e devolve o token administrativo |
 | `GET /api/admin/session` | Verifica se o token ainda é válido |
 | `POST /api/admin/draw` | Inicia o sorteio de sete segundos |

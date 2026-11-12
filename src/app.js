@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { createAdminRouter } from './routes/admin.js';
 import { createDrawRouter } from './routes/draw.js';
 import { healthRouter } from './routes/health.js';
+import { participantsRouter } from './routes/participants.js';
 
 export function configureApp(app, drawCoordinator) {
   app.disable('x-powered-by');
@@ -13,6 +14,7 @@ export function configureApp(app, drawCoordinator) {
     response.json({ name: 'Sorteio Futebol API', version: '0.2.0' });
   });
   app.use('/api/health', healthRouter);
+  app.use('/api/participants', participantsRouter);
   app.use('/api/draw', createDrawRouter(drawCoordinator));
   app.use('/api/admin', createAdminRouter(drawCoordinator));
 

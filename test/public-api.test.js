@@ -34,6 +34,8 @@ test('entrega o estado real e o cliente Socket.IO na tela pública', async () =>
     assert.equal(pageResponse.status, 200);
     assert.match(html, /socket\.io\/socket\.io\.js/);
     assert.match(html, /connection-status/);
+    assert.match(html, /liga-futebas-2026\.png/);
+    assert.match(html, /participants-list/);
   } finally {
     await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
   }
