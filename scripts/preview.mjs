@@ -10,11 +10,19 @@ const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.png': 'image/png',
   '.svg': 'image/svg+xml',
 };
 
 createServer(async (request, response) => {
-  const urlPath = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname);
+  const requestUrl = new URL(request.url, `http://${request.headers.host}`);
+  const urlPath = decodeURIComponent(requestUrl.pathname);
+
+  if (!requestUrl.searchParams.has('demo') && (urlPath === '/' || urlPath === '/admin.html')) {
+    response.writeHead(302, { Location: `${urlPath}?demo=1` }).end();
+    return;
+  }
+
   const requestedPath = urlPath === '/' ? 'index.html' : urlPath.slice(1);
   const filePath = normalize(join(root, requestedPath));
 
@@ -32,5 +40,6 @@ createServer(async (request, response) => {
     response.writeHead(404).end('Not found');
   }
 }).listen(port, '127.0.0.1', () => {
-  console.log(`Preview: http://127.0.0.1:${port}`);
+  console.log(`Preview público: http://127.0.0.1:${port}/?demo=1`);
+  console.log(`Preview admin:   http://127.0.0.1:${port}/admin.html?demo=1`);
 });

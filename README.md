@@ -50,7 +50,7 @@ Ao iniciar, todos os clientes recebem o estado `DRAWING`. Sete segundos depois, 
    npm run dev
    ```
 
-Para revisar somente o protótipo visual, sem banco de dados, use `npm run preview`. O painel simulado fica em `/admin.html` e a tela pública de demonstração em `/?demo=1`.
+Para revisar somente o protótipo visual, sem banco de dados, use `npm run preview`. O servidor redireciona automaticamente a tela pública e o painel para o modo demonstrativo, sem tentar acessar a API real.
 
 ## Endpoints iniciais
 
