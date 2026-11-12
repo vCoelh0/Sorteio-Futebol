@@ -1,15 +1,22 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { pool } from '../config/database.js';
 import { assertDatabaseEnv } from '../config/env.js';
 
-const migrationUrl = new URL('./migrations/001_initial.sql', import.meta.url);
+const migrationsUrl = new URL('./migrations/', import.meta.url);
 
 async function migrate() {
   assertDatabaseEnv();
-  const sql = await readFile(fileURLToPath(migrationUrl), 'utf8');
-  await pool.query(sql);
-  console.log('Migração inicial aplicada com sucesso.');
+  const directory = fileURLToPath(migrationsUrl);
+  const files = (await readdir(directory))
+    .filter((file) => file.endsWith('.sql'))
+    .sort();
+
+  for (const file of files) {
+    const sql = await readFile(new URL(file, migrationsUrl), 'utf8');
+    await pool.query(sql);
+    console.log(`Migração aplicada: ${file}`);
+  }
 }
 
 migrate()

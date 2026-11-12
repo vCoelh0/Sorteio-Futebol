@@ -11,7 +11,8 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "migrate": "node src/db/migrate.js",
-    "check": "node --check src/server.js && node --check src/app.js && node --check src/config/env.js && node --check src/config/database.js && node --check src/db/migrate.js && node --check src/routes/health.js && node --check src/services/draw-state.js && node --check src/socket/index.js",
+    "seed": "node src/db/seed.js",
+    "check": "node --check src/server.js && node --check src/app.js && node --check src/config/env.js && node --check src/config/database.js && node --check src/db/migrate.js && node --check src/db/seed.js && node --check src/routes/admin.js && node --check src/routes/draw.js && node --check src/routes/health.js && node --check src/services/draw-coordinator.js && node --check src/services/draw-state.js && node --check src/services/team-draw.js && node --check src/socket/index.js",
     "test": "node --test"
   },
   "dependencies": {

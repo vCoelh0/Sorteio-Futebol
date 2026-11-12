@@ -4,7 +4,7 @@ Aplicação para realizar, acompanhar e manter ao vivo o sorteio de 25 participa
 
 ## Estado atual
 
-Esta primeira etapa prepara o backend e a infraestrutura do projeto:
+O backend já executa e persiste o sorteio completo:
 
 - Node.js, Express e Socket.IO;
 - PostgreSQL hospedado no Neon;
@@ -12,9 +12,13 @@ Esta primeira etapa prepara o backend e a infraestrutura do projeto:
 - estados `IDLE`, `DRAWING` e `COMPLETED`;
 - animação prevista de sete segundos;
 - health checks da aplicação e do banco;
-- configuração inicial para Render e GitHub Actions.
+- configuração para Render e GitHub Actions;
+- autenticação das ações administrativas;
+- sorteio aleatório dos cinco times, sem nomes repetidos;
+- transmissão simultânea do início, resultado e reset pelo Socket.IO;
+- recuperação automática de um sorteio após reinício do servidor.
 
-As rotas administrativas e a lógica que efetivamente sorteia e reseta os times serão implementadas na próxima etapa.
+Ao iniciar, todos os clientes recebem o estado `DRAWING`. Sete segundos depois, recebem os cinco times pelo evento `draw:state`. O resultado permanece salvo até o administrador resetá-lo.
 
 ## Requisitos
 
@@ -31,10 +35,11 @@ As rotas administrativas e a lógica que efetivamente sorteia e reseta os times 
 
 2. Copie `.env.example` para `.env` e preencha os valores.
 
-3. Crie as tabelas:
+3. Crie as tabelas e importe os participantes de `data/participants.json`:
 
    ```bash
    npm run migrate
+   npm run seed
    ```
 
 4. Inicie o servidor:
@@ -50,15 +55,17 @@ As rotas administrativas e a lógica que efetivamente sorteia e reseta os times 
 | `GET /api` | Identificação da API |
 | `GET /api/health` | Estado da aplicação |
 | `GET /api/health/database` | Estado da conexão com o banco |
+| `GET /api/draw` | Estado público atual do sorteio |
+| `POST /api/admin/draw` | Inicia o sorteio de sete segundos |
+| `POST /api/admin/reset` | Limpa o resultado e retorna para `IDLE` |
 
-Ao abrir uma conexão Socket.IO, o servidor envia o estado persistido pelo evento `draw:state`.
+As rotas administrativas exigem `Authorization: Bearer <ADMIN_TOKEN>` ou o cabeçalho `x-admin-token`.
+
+Ao abrir uma conexão Socket.IO, o servidor envia o estado persistido pelo evento `draw:state`. O mesmo evento é transmitido a todos no início e na conclusão do sorteio e após o reset. Enquanto o estado é `DRAWING`, os times permanecem ocultos na API e no socket.
 
 ## Próximas etapas
 
 - cadastrar os nomes reais dos 25 participantes;
-- implementar autenticação do administrador;
-- implementar as ações de sortear e resetar;
-- transmitir a animação e o resultado para todos os visitantes;
 - integrar o frontend responsivo baseado nos protótipos.
 
 O arquivo `data/participants.json` contém nomes temporários e poderá ser substituído antes da importação para o banco.

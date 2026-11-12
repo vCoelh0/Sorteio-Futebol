@@ -3,7 +3,7 @@ services:
     name: sorteio-futebol
     runtime: node
     plan: free
-    buildCommand: npm install && npm run migrate
+    buildCommand: npm install && npm run migrate && npm run seed
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:

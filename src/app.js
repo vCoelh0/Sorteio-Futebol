@@ -1,16 +1,18 @@
 import express from 'express';
+import { createAdminRouter } from './routes/admin.js';
+import { createDrawRouter } from './routes/draw.js';
 import { healthRouter } from './routes/health.js';
 
-export function createApp() {
-  const app = express();
-
+export function configureApp(app, drawCoordinator) {
   app.disable('x-powered-by');
   app.use(express.json({ limit: '32kb' }));
 
   app.get('/api', (_request, response) => {
-    response.json({ name: 'Sorteio Futebol API', version: '0.1.0' });
+    response.json({ name: 'Sorteio Futebol API', version: '0.2.0' });
   });
   app.use('/api/health', healthRouter);
+  app.use('/api/draw', createDrawRouter(drawCoordinator));
+  app.use('/api/admin', createAdminRouter(drawCoordinator));
 
   app.use((_request, response) => {
     response.status(404).json({ message: 'Rota não encontrada.' });
