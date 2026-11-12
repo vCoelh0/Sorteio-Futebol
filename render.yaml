@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: sorteio-futebol
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run migrate
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: CLIENT_ORIGIN
+        sync: false
