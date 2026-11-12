@@ -30,7 +30,7 @@ Ao iniciar, todos os clientes recebem o estado `DRAWING`. Sete segundos depois, 
 1. Instale as dependências:
 
    ```bash
-   npm install
+   npm ci
    ```
 
 2. Copie `.env.example` para `.env` e preencha os valores.
