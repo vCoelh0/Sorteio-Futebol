@@ -24,6 +24,7 @@ function transactionDatabase({ status = 'IDLE', participantCount = 25 } = {}) {
   const participants = Array.from({ length: participantCount }, (_, index) => ({
     id: index + 1,
     name: `Participante ${index + 1}`,
+    is_captain: index < 5,
   }));
 
   const client = {

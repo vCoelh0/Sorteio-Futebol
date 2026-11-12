@@ -3,6 +3,7 @@ import { env } from '../config/env.js';
 import { requireAdmin } from '../middleware/admin-auth.js';
 import { secureCompare } from '../services/admin-auth.js';
 import { DrawConflictError, ParticipantCountError } from '../services/draw-state.js';
+import { CaptainCountError } from '../services/team-draw.js';
 
 export function createAdminRouter(drawCoordinator) {
   const router = Router();
@@ -33,7 +34,7 @@ export function createAdminRouter(drawCoordinator) {
       if (error instanceof DrawConflictError) {
         return response.status(409).json({ message: error.message });
       }
-      if (error instanceof ParticipantCountError) {
+      if (error instanceof ParticipantCountError || error instanceof CaptainCountError) {
         return response.status(422).json({ message: error.message });
       }
       return next(error);

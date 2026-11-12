@@ -5,6 +5,7 @@ import { createTeams } from '../src/services/team-draw.js';
 const participants = Array.from({ length: 25 }, (_, index) => ({
   id: index + 1,
   name: `Participante ${index + 1}`,
+  is_captain: index < 5,
 }));
 
 test('cria cinco times com cinco jogadores sem repetições', () => {
@@ -15,6 +16,8 @@ test('cria cinco times com cinco jogadores sem repetições', () => {
   assert.ok(teams.every((team) => team.players.length === 5));
   assert.equal(players.length, 25);
   assert.equal(new Set(players.map(({ id }) => id)).size, 25);
+  assert.ok(teams.every((team) => team.players.filter(({ id }) => id <= 5).length === 1));
+  assert.ok(players.every((player) => !Object.hasOwn(player, 'is_captain')));
 });
 
 test('recusa uma quantidade de participantes diferente de 25', () => {
@@ -22,7 +25,13 @@ test('recusa uma quantidade de participantes diferente de 25', () => {
 });
 
 test('permite controlar a aleatoriedade durante os testes', () => {
-  const teams = createTeams(participants, () => 0);
-  assert.equal(teams[0].players[0].id, 2);
-  assert.equal(teams[4].players[4].id, 1);
+  assert.deepEqual(createTeams(participants, () => 0), createTeams(participants, () => 0));
+});
+
+test('recusa uma lista que não tenha exatamente cinco capitães', () => {
+  const invalidParticipants = participants.map((participant, index) => ({
+    ...participant,
+    is_captain: index < 4,
+  }));
+  assert.throws(() => createTeams(invalidParticipants), /exatamente 5 capitães/);
 });

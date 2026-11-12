@@ -1,10 +1,15 @@
 const STORAGE_KEY = 'liga-futebas-demo-state';
 const channel = 'BroadcastChannel' in window ? new BroadcastChannel(STORAGE_KEY) : null;
 
-export const participants = Array.from({ length: 25 }, (_, index) => ({
-  id: index + 1,
-  name: `Participante ${String(index + 1).padStart(2, '0')}`,
-}));
+const participantNames = [
+  'FJ', 'Big', 'Djalma', 'Wil', 'Douglas', 'Giovanni', 'Gabriel', 'Renan', 'João Freitas',
+  'House', 'Ivan', 'Bruno', 'Davidson', 'Cleyton', 'Vini Leite', 'Arthur', 'Allan', 'Mario',
+  'Marquinhos', 'Tiago', 'André', 'Kauan', 'Murilo', 'João Vitor - Irmão do Fran',
+  'Kaique (George Washington)',
+];
+
+export const participants = participantNames.map((name, index) => ({ id: index + 1, name }));
+const captainNames = new Set(['Tiago', 'Kauan', 'João Freitas', 'Marquinhos', 'FJ']);
 
 export function emptyState() {
   return { status: 'IDLE', teams: [], startedAt: null, revealAt: null, completedAt: null };
@@ -30,14 +35,25 @@ export function subscribe(callback) {
 }
 
 export function drawTeams() {
-  const shuffled = [...participants];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
-  }
-  return Array.from({ length: 5 }, (_, index) => ({
+  const shuffle = (items) => {
+    const shuffled = [...items];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+    }
+    return shuffled;
+  };
+  const captains = shuffle(participants.filter(({ name }) => captainNames.has(name)));
+  const players = shuffle(participants.filter(({ name }) => !captainNames.has(name)));
+  const teams = Array.from({ length: 5 }, (_, index) => ({
     number: index + 1,
     name: `TIME ${index + 1}`,
-    players: shuffled.slice(index * 5, index * 5 + 5),
+    players: [captains[index]],
   }));
+
+  players.forEach((player, index) => {
+    teams[index % 5].players.push(player);
+  });
+
+  return teams;
 }

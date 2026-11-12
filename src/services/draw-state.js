@@ -58,7 +58,7 @@ export async function beginDraw(database = pool) {
     }
 
     const participantsResult = await client.query(
-      'SELECT id, name FROM participants WHERE active = TRUE ORDER BY id',
+      'SELECT id, name, is_captain FROM participants WHERE active = TRUE ORDER BY id',
     );
     if (participantsResult.rowCount !== DRAW_CONFIG.participantCount) {
       throw new ParticipantCountError(
