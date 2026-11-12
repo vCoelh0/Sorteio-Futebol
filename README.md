@@ -67,6 +67,8 @@ Para revisar somente o protótipo visual, sem banco de dados, use `npm run previ
 
 O login recebe `{ "password": "..." }`. As demais rotas administrativas exigem `Authorization: Bearer <token>` ou o cabeçalho `x-admin-token`. Para sair, o frontend só precisa apagar o token armazenado localmente.
 
+O painel em `/admin.html` já possui formulário de login, mantém o token apenas durante a sessão da aba e acompanha pelo Socket.IO a conclusão do sorteio. No modo visual sem backend, use `/admin.html?demo=1`.
+
 Ao abrir uma conexão Socket.IO, o servidor envia o estado persistido pelo evento `draw:state`. O mesmo evento é transmitido a todos no início e na conclusão do sorteio e após o reset. Enquanto o estado é `DRAWING`, os times permanecem ocultos na API e no socket.
 
 ## Próximas etapas

@@ -31,6 +31,9 @@ button { cursor: pointer; }
 .live-badge.disconnected { color: var(--muted); }
 .live-badge.disconnected span:first-child { background: #909993; box-shadow: none; animation: none; }
 .admin-label { color: var(--green-700); font-size: .78rem; font-weight: 700; }
+.admin-header-actions { display: flex; align-items: center; gap: 18px; }
+.text-button { padding: 6px 0; color: var(--muted); background: none; border: 0; font-size: .75rem; font-weight: 700; }
+.text-button:hover { color: var(--green-700); }
 
 .public-page, .admin-page { width: min(1180px, calc(100% - 44px)); margin: 0 auto; }
 .hero { padding: clamp(44px, 7vw, 88px) 0 38px; display: grid; grid-template-columns: 1.35fr 1fr; gap: 54px; align-items: end; }
@@ -80,6 +83,16 @@ h1, h2 { margin: 0; font-family: "Barlow Condensed", sans-serif; line-height: .9
 
 .admin-body { background: var(--surface); min-height: 100vh; }
 .admin-page { max-width: 880px; padding: clamp(46px, 8vw, 88px) 0 70px; }
+.login-card { max-width: 460px; margin: 0 auto; padding: clamp(28px, 5vw, 46px); background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.login-card > img { display: block; margin-bottom: 25px; }
+.login-card h1 { font-size: clamp(2.8rem, 6vw, 4rem); }
+.login-card > p:not(.eyebrow) { margin: 14px 0 28px; color: var(--muted); line-height: 1.55; }
+.login-card form { display: grid; gap: 11px; }
+.login-card label { font-size: .75rem; font-weight: 700; }
+.login-card input { width: 100%; min-height: 48px; padding: 0 14px; color: var(--ink); background: var(--white); border: 1px solid #cfd7d2; border-radius: 9px; outline: none; }
+.login-card input:focus { border-color: var(--green-700); box-shadow: 0 0 0 4px rgba(11,74,44,.1); }
+.login-card .primary-button { min-height: 48px; margin-top: 7px; }
+.form-error { margin: 0; color: var(--danger); font-size: .75rem; }
 .admin-intro h1 { font-size: clamp(3rem, 6vw, 4.6rem); }
 .admin-intro > p:last-child { color: var(--muted); }
 .metrics { display: grid; grid-template-columns: repeat(3, 1fr); margin: 38px 0 24px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); }

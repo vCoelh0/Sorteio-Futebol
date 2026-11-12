@@ -16,10 +16,27 @@
         <img src="/assets/logo.svg" alt="" width="38" height="43">
         <span>LIGA FUTEBAS</span>
       </a>
-      <span class="admin-label">Painel do administrador</span>
+      <div class="admin-header-actions">
+        <span class="admin-label">Painel do administrador</span>
+        <button class="text-button" id="logout-button" type="button" hidden>Sair</button>
+      </div>
     </header>
 
     <main class="admin-page">
+      <section class="login-card" id="login-view">
+        <img src="/assets/logo.svg" alt="" width="54" height="61">
+        <p class="eyebrow">Acesso restrito</p>
+        <h1>Entrar no painel</h1>
+        <p>Use a senha do administrador para controlar o sorteio.</p>
+        <form id="login-form">
+          <label for="admin-password">Senha</label>
+          <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+          <p class="form-error" id="login-error" role="alert" hidden></p>
+          <button class="primary-button" id="login-button" type="submit">Entrar</button>
+        </form>
+      </section>
+
+      <div id="admin-view" hidden>
       <section class="admin-intro">
         <p class="eyebrow">Área do organizador</p>
         <h1>Controle do sorteio</h1>
@@ -46,7 +63,9 @@
       </section>
 
       <div class="toast" id="toast" role="status" hidden></div>
+      </div>
     </main>
+    <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="/admin.js"></script>
   </body>
 </html>
